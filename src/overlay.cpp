@@ -115,6 +115,7 @@ struct MissionTimer {
 } g_timer;
 
 int ReadI32(uintptr_t a);
+uintptr_t Sess(uintptr_t off);
 int ReadI16(uintptr_t a);
 
 int g_missionStarts = 0;  // goes up each time a mission starts (used by the HP/DT fix)
@@ -213,7 +214,7 @@ void UpdateTimer() {
         t.state = TimerState::Finished;
         t.shown = final;
         dlog::Write("[MissionTimer] mission finished (%.0f frames)", final);
-        t.crit = {ReadI32(0x10284C), ReadI32(0x102848), ReadI16(0x102850), ReadI16(0x102880)};
+        t.crit = {ReadI32(Sess(0x264C)), ReadI32(Sess(0x2648)), ReadI16(Sess(0x2650)), ReadI16(Sess(0x2680))};
         t.critFrozen = true;
         dlog::Write("[Criteria] frozen at the end: orbs %d, damage %d", t.crit.orbs, t.crit.damage);
 
@@ -356,6 +357,15 @@ std::string CurrentPbText() {
 int ReadI32(uintptr_t a) { int32_t v = 0; SIZE_T n; ReadProcessMemory(GetCurrentProcess(), (LPCVOID)a, &v, 4, &n); return v; }
 int ReadI16(uintptr_t a) { int16_t v = 0; SIZE_T n; ReadProcessMemory(GetCurrentProcess(), (LPCVOID)a, &v, 2, &n); return v; }
 int ReadU8(uintptr_t a) { uint8_t v = 0; SIZE_T n; ReadProcessMemory(GetCurrentProcess(), (LPCVOID)a, &v, 1, &n); return v; }
+// session + offset (session found at startup, game_addrs); 0 if not available.
+uintptr_t Sess(uintptr_t off) {
+    if (!g_addrs.session) return 0;
+    uintptr_t p = 0;
+    SIZE_T n = 0;
+    const auto base = reinterpret_cast<uintptr_t>(GetModuleHandleW(nullptr));
+    if (!ReadProcessMemory(GetCurrentProcess(), (LPCVOID)(base + g_addrs.session), &p, sizeof(p), &n) || !p) return 0;
+    return p + off;
+}
 
 std::string Clock(int sec) {
     char b[16];
@@ -373,19 +383,19 @@ void DrawCriteria() {
     criteria::Mission c;
     if (!criteria::Get(mission, c)) return;
 
-    const int diff = ReadU8(0x102066);  // save copy +0x26: 2 Easy, 3 Normal, 5 Hard, 6 DMD
+    const int diff = ReadU8(Sess(0x1E66));  // session+0x1E66 = save copy +0x26: 2 Easy, 3 Normal, 5 Hard, 6 DMD
     const bool dmd = diff == 6;
     const char* diffName = diff == 2 ? "Easy" : diff == 3 ? "Normal" : diff == 5 ? "Hard" : dmd ? "DMD" : "?";
     const bool live = t.state != TimerState::Idle;
     const double frames = live ? t.shown : 0;
     // After the end: the values from when the results screen came up (bonus orbs come later).
     const bool frozen = t.state == TimerState::Finished && t.critFrozen;
-    const int orbs = frozen ? t.crit.orbs : ReadI32(0x10284C);
-    const int damage = frozen ? t.crit.damage : ReadI32(0x102848);
+    const int orbs = frozen ? t.crit.orbs : ReadI32(Sess(0x264C));
+    const int damage = frozen ? t.crit.damage : ReadI32(Sess(0x2648));
     // The game keeps the item penalty as a negative number (-100 per item); use its size.
-    const int penaltyRaw = frozen ? t.crit.penalty : ReadI16(0x102850);
+    const int penaltyRaw = frozen ? t.crit.penalty : ReadI16(Sess(0x2650));
     const int penalty = penaltyRaw < 0 ? -penaltyRaw : penaltyRaw;
-    const int bonus = frozen ? t.crit.bonus : ReadI16(0x102880);
+    const int bonus = frozen ? t.crit.bonus : ReadI16(Sess(0x2680));
     const criteria::Score s = criteria::Compute(c, frames, g_config.ticksPerSecond, orbs, damage, penalty, bonus, dmd);
 
     char title[64];

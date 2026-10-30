@@ -1,4 +1,4 @@
-# DMC1 Practice Mod (v1.4.0)
+# DMC1 Practice Mod (v1.4.1)
 
 Created by **waifu**.
 
@@ -18,8 +18,9 @@ Player instructions are in `README.txt` (the one that ships in the release zip).
 ## Source layout
 - `src/`: the mod, a `dinput8.dll` proxy that draws with ImGui from the D3D11 swap chain's Present
   (hooked in the swap chain's function table, so capture software sees the overlay).
-  - `game_addrs.*`: finds the build-specific addresses by pattern scanning, so the mod works on
-    both the 2018 build and the newer one.
+  - `game_addrs.*`: finds every game address by pattern scanning (no hardcoded addresses), so the
+    mod works on both the 2018 build and the newer one and survives game updates that keep the
+    same code.
   - `reset.*`: mission and room restarts.
   - `builder.*` and `presets.*`: building save slots from presets.
   - `menu.*`: the F2 menu and preset editor.

@@ -150,13 +150,20 @@ bool game_addrs::Resolve(bool quiet) {
     // Mission start spawn: shl rax,5 ; movups xmm0,[rax+r8+10] ; movaps [nextPos],xmm0
     if (Find(text, "spawn position", "48 C1 E0 05 42 0F 10 44 00 10 0F 29 05 D", t)) g_addrs.nextPos = t[0];
 
+    // Save buffer: mov rbx,[saveBuf] ; lea rdx,[rbx+70] ; call (the startup read of dmc1.sav)
+    if (Find(text, "save buffer", "48 8B 1D D 48 8D 53 70 E8", t)) g_addrs.saveBuf = t[0];
+    // HUD: mov rax,[hud] ; movzx ecx,byte [rcx+2464] ; mov [rax+98],cl (HP bars after a blue orb)
+    if (Find(text, "HUD", "48 8B 05 D ?? ?? ?? ?? ?? ?? ?? 88 88 98 00 00 00", t)) g_addrs.hud = t[0];
+
     const bool all = g_addrs.session && g_addrs.stage && g_addrs.actor && g_addrs.startFrame && g_addrs.nextPos &&
-                     g_addrs.fnForm && g_addrs.fnGun && g_addrs.fnMelee;
+                     g_addrs.fnForm && g_addrs.fnGun && g_addrs.fnMelee && g_addrs.saveBuf && g_addrs.hud;
     if (quiet && !all) return false;
     dlog::Write("[Addrs] session +%llX, stage +%llX, player +%llX, start frame +%llX, spawn +%llX",
                 (unsigned long long)g_addrs.session, (unsigned long long)g_addrs.stage,
                 (unsigned long long)g_addrs.actor, (unsigned long long)g_addrs.startFrame,
                 (unsigned long long)g_addrs.nextPos);
+    dlog::Write("[Addrs] save buffer +%llX, HUD +%llX", (unsigned long long)g_addrs.saveBuf,
+                (unsigned long long)g_addrs.hud);
     dlog::Write("[Addrs] weapon functions: form +%llX, gun +%llX, melee +%llX", (unsigned long long)g_addrs.fnForm,
                 (unsigned long long)g_addrs.fnGun, (unsigned long long)g_addrs.fnMelee);
     return all;
@@ -170,6 +177,8 @@ bool game_addrs::Lookup(const std::string& name, uintptr_t& offset) {
     else if (n == "actor" || n == "player") offset = g_addrs.actor;
     else if (n == "startframe") offset = g_addrs.startFrame;
     else if (n == "nextpos") offset = g_addrs.nextPos;
+    else if (n == "hud") offset = g_addrs.hud;
+    else if (n == "savebuf") offset = g_addrs.saveBuf;
     else return false;
     return offset != 0;
 }

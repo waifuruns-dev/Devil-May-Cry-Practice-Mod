@@ -75,13 +75,13 @@ struct Config {
 
     // After a mission starts, set Max HP / Max DT from the bar lengths (fixes hot-swap leftovers).
     bool statFix = true;
-    std::string hpBarAddr = "00102664";    // u8, HP bar length
-    std::string dtBarAddr = "00102665";    // u8, DT bar length
-    std::string maxHpAddr = "00104B98";    // u16
-    std::string maxDtAddr = "00104BA4";    // u16, DT time max (200 per rune)
-    std::string maxGaugeAddr = "00104BA0"; // u16, DT gauge max (120 per rune)
-    std::string hpAddr = "00104772";       // u16, current HP
-    std::string dtAddr = "00104B9E";       // u16, current DT gauge (120 per rune)
+    std::string hpBarAddr = "@Session -> 2464";    // u8, HP bar length
+    std::string dtBarAddr = "@Session -> 2465";    // u8, DT bar length
+    std::string maxHpAddr = "@Actor -> 1BC8";    // u16
+    std::string maxDtAddr = "@Actor -> 1BD4";    // u16, DT time max (200 per rune)
+    std::string maxGaugeAddr = "@Actor -> 1BD0"; // u16, DT gauge max (120 per rune)
+    std::string hpAddr = "@Actor -> 17A2";       // u16, current HP
+    std::string dtAddr = "@Actor -> 1BCE";       // u16, current DT gauge (120 per rune)
 
     // Instant reset: restarts the current mission from how it began (or from the last preset).
     bool resetEnabled = true;

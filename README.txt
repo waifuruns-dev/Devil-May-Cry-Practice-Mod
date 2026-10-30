@@ -1,4 +1,4 @@
-DMC1 PRACTICE MOD  v1.4.0
+DMC1 PRACTICE MOD  v1.4.1
 Devil May Cry HD Collection (PC) - Devil May Cry 1
 Created by waifu
 =================================================
@@ -131,10 +131,16 @@ KNOWN LIMITATIONS
 
 GAME VERSIONS
 -------------
-The mod finds the addresses it needs in the game's code when it starts, so it works on both the
-2018 Steam release and the newer build (with Steam's protection the overlay may take a second to
-appear). If something doesn't work, check dmc1_practice.log: the "[Addrs]" lines show what was
+The mod hardcodes no game addresses: at start it finds them in the game's own code, so it works
+on both the 2018 Steam release and the newer build, and should keep working after future game
+updates as long as the code it looks for is still there (with Steam's protection the overlay may
+take a second to appear). If an update does break something, the features that need the missing
+address switch themselves off instead of writing to the wrong place, and the save tools check
+the save data before touching it. Check dmc1_practice.log: the "[Addrs]" lines show what was
 found. Please include that log (and your game version) when reporting a problem.
+
+If you keep an old dmc1_practice.ini from before 1.4.1, replace it with the new one: its addresses
+are now written relative to what the mod finds (e.g. "@Session -> 2464") instead of fixed numbers.
 
 
 CREDITS
@@ -161,6 +167,8 @@ directed and tested in-game by waifu.
 
 VERSION HISTORY
 ---------------
+1.4.1  Update-proofing: the last fixed addresses (in-memory save, HP / DT bars, room timer, rank
+       criteria, INI addresses) are now found in the game's code at start, like the rest.
 1.4.0  The overlay is drawn before capture software sees the frame (shows in OBS with "Capture
        third-party overlays" off); "PRACTICE MOD" tag while the mod is on.
 1.3.0  Export a preset to slot 10 of your real save (X in the F2 list).

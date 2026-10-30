@@ -120,7 +120,7 @@ void RestoreLoadBlock(uintptr_t session, uint32_t bits) {
     Write(session + kLoadBlockField, &v, 4);
 }
 uint32_t g_missionLoadBlock = 0;   // scripted-event bit to put back after a mission start
-constexpr uintptr_t kLiveHpBars = 0x137948, kLiveDtBars = 0x137953;
+constexpr uintptr_t kHudHpBars = 0x98, kHudDtBars = 0xA3;  // in the HUD state ([g_addrs.hud])
 
 // What the title screen's mission init does (dmc1.exe+24F9A3-24F9FA) and our in-game request
 // otherwise skips. session+0x1F80..0x1F8F are per-mission run-time flags that happen to be inside
@@ -302,8 +302,10 @@ bool Trigger(const std::vector<uint8_t>& slot, std::string& error, bool followUp
     // a mid-mission load kept the previous mission's (DT runes carried over).
     {
         const uint8_t hpBars = slot[0x624], dtBars = slot[0x625];
-        Write(kLiveHpBars, &hpBars, 1);
-        Write(kLiveDtBars, &dtBars, 1);
+        if (const uintptr_t hud = Deref(g_addrs.hud)) {
+            Write(hud + kHudHpBars, &hpBars, 1);
+            Write(hud + kHudDtBars, &dtBars, 1);
+        }
     }
 
     // 2) Room load target = the current room (the mission start then picks its own start room).
@@ -455,7 +457,7 @@ constexpr size_t kRoomSaveEnd = 0x910;        // the game's own load copies 0x90
 constexpr uintptr_t kActorPos = 0x170;
 constexpr uintptr_t kActorHp = 0x17A2;
 constexpr uintptr_t kActorDtTime = 0x1BD2;
-constexpr uintptr_t kRoomTimer = 0x102998;   // game's room timer (stops when paused / loading)
+constexpr uintptr_t kStageRoomTimer = 0x18;   // stage+0x18: game's room timer (stops when paused / loading)
 
 struct RoomSnap {
     bool valid = false;
@@ -642,7 +644,7 @@ void UpdateRoom(bool focused, bool missionStarted, ULONGLONG now) {
     if (g_roomPending) {
         TracePending();
         int32_t rt = -1;
-        Read(kRoomTimer, &rt, 4);
+        if (const uintptr_t stage = Deref(kStagePtr)) Read(stage + kStageRoomTimer, &rt, 4);
         if (haveEv && !(ev & kEvRoomActive) && !g_roomSawUnload) {
             g_roomSawUnload = true;
             g_roomLastTimer = rt;

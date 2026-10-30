@@ -1,5 +1,6 @@
 #include "savefile.h"
 #include "log.h"
+#include "game_addrs.h"
 
 #include <windows.h>
 #include <cstdio>
@@ -91,10 +92,20 @@ std::wstring savefile::Locate(const std::wstring& iniOverride) {
 }
 
 namespace {
-// The game reads dmc1.sav into memory once at startup (10 slots of 0x970 bytes from 0x139DB0) and
-// Load Game reads that copy, so a slot written to the file mid-session only shows up after a restart.
-// Write the in-memory copy too. Only done if it looks right (slot 1 has a valid checksum).
-constexpr uintptr_t kMemSaveFile = 0x139DB0;
+// The game reads dmc1.sav into memory once at startup (10 slots of 0x970 bytes at [saveBuf]+0x70,
+// 0x139DB0 on the known builds) and Load Game reads that copy, so a slot written to the file
+// mid-session only shows up after a restart. Write the in-memory copy too. Only done if it looks
+// right (a slot with a valid checksum).
+uintptr_t MemSaveFile() {
+    if (!g_addrs.saveBuf) return 0;  // not found on this build: memory writes are skipped
+    uintptr_t p = 0;
+    SIZE_T got = 0;
+    const auto base = reinterpret_cast<uintptr_t>(GetModuleHandleW(nullptr));
+    if (!ReadProcessMemory(GetCurrentProcess(), reinterpret_cast<LPCVOID>(base + g_addrs.saveBuf), &p, sizeof(p), &got) ||
+        got != sizeof(p) || !p)
+        return 0;
+    return p + 0x70;
+}
 bool SlotChecksumOk(const uint8_t* s) {
     uint32_t sum = 0;
     for (size_t i = 0x0A; i < kSlotSize; ++i) sum += s[i];
@@ -103,6 +114,8 @@ bool SlotChecksumOk(const uint8_t* s) {
 }  // namespace
 
 bool savefile::WriteSlotToMemory(int slot, const std::vector<uint8_t>& data) {
+    const uintptr_t kMemSaveFile = MemSaveFile();
+    if (!kMemSaveFile) return false;
     if (slot < 1 || slot > 10 || data.size() != kSlotSize) return false;
     std::vector<uint8_t> first(kSlotSize);
     SIZE_T got = 0;
@@ -126,6 +139,8 @@ bool savefile::WriteSlotToMemory(int slot, const std::vector<uint8_t>& data) {
 }
 
 bool savefile::ReadSlotsFromMemory(std::vector<uint8_t>& out) {
+    const uintptr_t kMemSaveFile = MemSaveFile();
+    if (!kMemSaveFile) return false;
     out.assign(10 * kSlotSize, 0);
     SIZE_T got = 0;
     if (!ReadProcessMemory(GetCurrentProcess(), reinterpret_cast<LPCVOID>(kMemSaveFile), out.data(), out.size(), &got) ||
@@ -137,6 +152,10 @@ bool savefile::ReadSlotsFromMemory(std::vector<uint8_t>& out) {
 }
 
 bool savefile::WriteSlotsToMemory(const std::vector<uint8_t>& data) {
+    const uintptr_t kMemSaveFile = MemSaveFile();
+    if (!kMemSaveFile) return false;
+    std::vector<uint8_t> current;
+    if (!ReadSlotsFromMemory(current)) return false;  // not the save copy (no slot with a valid checksum)
     if (data.size() != 10 * kSlotSize) return false;
     SIZE_T done = 0;
     return WriteProcessMemory(GetCurrentProcess(), reinterpret_cast<LPVOID>(kMemSaveFile), data.data(), data.size(),
