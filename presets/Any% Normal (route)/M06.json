@@ -1,0 +1,22 @@
+{
+  "name": "Mission 6 (route loadout)",
+  "mission": 6,
+  "difficulty": "normal",
+  "costume": "dante",
+  "orbs": 4297,
+  "hp_bars": 10,
+  "dt_bars": 4,
+  "dt_gauge": "route",
+  "moves": [
+    "Stinger Lv2",
+    "Stinger Lv1"
+  ],
+  "items": {
+    "Vital Star": 1,
+    "Holy Water": 3
+  },
+  "equip": {
+    "devil_arm": "Alastor",
+    "gun": "Shotgun"
+  }
+}

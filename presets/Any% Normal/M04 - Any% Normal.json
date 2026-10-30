@@ -1,0 +1,23 @@
+{
+  "name": "Any% Normal",
+  "mission": 4,
+  "difficulty": "normal",
+  "costume": "dante",
+  "orbs": 400,
+  "hp_bars": 10,
+  "dt_bars": 4,
+  "dt_gauge": "full",
+  "moves": [
+    "Stinger Lv1",
+    "Stinger Lv2",
+    "Vortex Lv1"
+  ],
+  "items": {
+    "Holy Water": 1
+  },
+  "extra_weapons": [],
+  "equip": {
+    "devil_arm": "Alastor",
+    "gun": "Shotgun"
+  }
+}

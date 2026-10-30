@@ -1,0 +1,27 @@
+# DMC1 rank criteria per mission (source: https://dmc.wiki/dmc1:rank)
+# mission,target time (m:ss),target red orbs
+# Same targets on every difficulty. Missions 15-17 use the corrected orb values the wiki notes
+# (the in-game screenshots say 400). Mission 22 has no orbs to find.
+1,6:00,400
+2,7:00,450
+3,3:00,550
+4,4:00,550
+5,2:00,100
+6,3:30,250
+7,3:00,650
+8,3:00,585
+9,8:00,1500
+10,4:30,600
+11,5:30,1000
+12,4:00,700
+13,2:30,200
+14,5:00,500
+15,10:00,1400
+16,6:00,1000
+17,7:00,600
+18,6:00,900
+19,3:30,500
+20,4:30,700
+21,5:00,700
+22,8:00,0
+23,7:00,600

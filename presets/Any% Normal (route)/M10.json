@@ -1,0 +1,24 @@
+{
+  "name": "Mission 10 (route loadout)",
+  "mission": 10,
+  "difficulty": "normal",
+  "costume": "dante",
+  "orbs": 1955,
+  "hp_bars": 10,
+  "dt_bars": 5,
+  "dt_gauge": "route",
+  "moves": [
+    "Vortex Lv2",
+    "Vortex Lv1",
+    "Stinger Lv2",
+    "Stinger Lv1"
+  ],
+  "items": {
+    "Vital Star": 1,
+    "Holy Water": 5
+  },
+  "equip": {
+    "devil_arm": "Alastor",
+    "gun": "Grenadegun"
+  }
+}

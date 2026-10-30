@@ -1,0 +1,24 @@
+{
+  "name": "Mission 8 (route loadout)",
+  "mission": 8,
+  "difficulty": "normal",
+  "costume": "dante",
+  "orbs": 2126,
+  "hp_bars": 10,
+  "dt_bars": 4,
+  "dt_gauge": "route",
+  "moves": [
+    "Vortex Lv2",
+    "Vortex Lv1",
+    "Stinger Lv2",
+    "Stinger Lv1"
+  ],
+  "items": {
+    "Vital Star": 1,
+    "Holy Water": 1
+  },
+  "equip": {
+    "devil_arm": "Alastor",
+    "gun": "Shotgun"
+  }
+}

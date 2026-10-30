@@ -1,0 +1,10 @@
+{
+  "name": "Mission 22",
+  "mission": 22,
+  "difficulty": "normal",
+  "costume": "dante",
+  "orbs": 0,
+  "dt_gauge": "full",
+  "moves": [],
+  "items": {}
+}

@@ -1,0 +1,28 @@
+# Build output
+build/
+out/
+*.dll
+*.lib
+*.a
+*.obj
+*.o
+*.pdb
+*.exp
+
+# Files the mod writes next to the game (not part of the source)
+*.log
+*.sav
+*.practice_backup
+*.practice_tmp
+dmc1_save_backups/
+dmc1_exports/
+dmc1_practice_pbs.txt
+*.bak
+*.json.deleted
+
+# Editors / OS
+.vs/
+.vscode/
+.idea/
+Thumbs.db
+.DS_Store

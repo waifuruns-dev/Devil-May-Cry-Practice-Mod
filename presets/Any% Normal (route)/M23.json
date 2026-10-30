@@ -1,0 +1,26 @@
+{
+  "name": "Mission 23 (route loadout)",
+  "mission": 23,
+  "difficulty": "normal",
+  "costume": "dante",
+  "orbs": 3854,
+  "hp_bars": 10,
+  "dt_bars": 8,
+  "dt_gauge": "route",
+  "moves": [
+    "Air Raid",
+    "Vortex Lv2",
+    "Vortex Lv1",
+    "Stinger Lv2",
+    "Stinger Lv1",
+    "Air Hike"
+  ],
+  "items": {
+    "Vital Star": 1,
+    "Holy Water": 2
+  },
+  "equip": {
+    "devil_arm": "Alastor",
+    "gun": "Grenadegun"
+  }
+}

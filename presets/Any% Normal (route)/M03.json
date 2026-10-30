@@ -1,0 +1,18 @@
+{
+  "name": "Mission 3 (route loadout)",
+  "mission": 3,
+  "difficulty": "normal",
+  "costume": "dante",
+  "orbs": 1850,
+  "hp_bars": 10,
+  "dt_bars": 3,
+  "dt_gauge": "route",
+  "moves": [],
+  "items": {
+    "Vital Star": 1
+  },
+  "equip": {
+    "devil_arm": "Alastor",
+    "gun": "Shotgun"
+  }
+}

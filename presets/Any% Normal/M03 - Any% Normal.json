@@ -1,0 +1,22 @@
+{
+  "name": "Any% Normal",
+  "mission": 3,
+  "difficulty": "normal",
+  "costume": "dante",
+  "orbs": 100,
+  "hp_bars": 10,
+  "dt_bars": 3,
+  "dt_gauge": 120,
+  "moves": [
+    "Stinger Lv1",
+    "Stinger Lv2"
+  ],
+  "items": {
+    "Vital Star": 1
+  },
+  "extra_weapons": [],
+  "equip": {
+    "devil_arm": "Alastor",
+    "gun": "Shotgun"
+  }
+}
